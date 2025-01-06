@@ -13,6 +13,7 @@ function App() {
   const bearerToken = import.meta.env.VITE_BEARER_TOKEN
   //console.log("BearerToken===",bearerToken)
 
+  const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
   const loaderOptions = {
     loop: true,
     autoplay: true,
@@ -56,7 +57,7 @@ function App() {
     setInputValue("");
     try {
       
-      const response = await fetch(apiEndpoint, {
+      const response = await fetch(apii, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
