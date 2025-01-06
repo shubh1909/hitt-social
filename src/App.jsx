@@ -1,6 +1,7 @@
 import { useState } from 'react'
-
-import './App.css'
+import Lottie from 'react-lottie';
+import loaderAnimation from './assets/loading.json'
+ import './App.css'
 
 function App() {
   
@@ -12,6 +13,20 @@ function App() {
   const bearerToken = import.meta.env.VITE_BEARER_TOKEN
   //console.log("BearerToken===",bearerToken)
 
+  const loaderOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loaderAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  };
   const handleSend = async () => {
     if (!inputValue.trim()) return;
 
@@ -34,8 +49,13 @@ function App() {
     };
 
     setIsLoading(true);
-
+    setChatHistory((prev) => [
+      ...prev,
+      { sender: "user", message: inputValue }
+    ]);
+    setInputValue("");
     try {
+      
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
@@ -47,18 +67,16 @@ function App() {
       });
 
       const data = await response.json();
-
+      let ans=data.outputs[0].outputs[0].artifacts.message;
       setChatHistory((prev) => [
         ...prev,
-        { sender: "user", message: inputValue },
-        { sender: "bot", message: data.response || "No response received" },
+        { sender: "bot", message: ans || "No response received" },
       ]);
-      setInputValue("");
+      
     } catch (error) {
       console.error("Error sending message:", error);
       setChatHistory((prev) => [
         ...prev,
-        { sender: "user", message: inputValue },
         { sender: "bot", message: "Error occurred while fetching response." },
       ]);
     } finally {
@@ -66,46 +84,43 @@ function App() {
     }
   };
   return (
-    <>
-      <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
-      <h2>Chatbot</h2>
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          height: "300px",
-          overflowY: "auto",
-          marginBottom: "10px",
-        }}
-      >
+    <div className="app-container">
+      <h2 className="title">Chatbot</h2>
+      <div className="chatbox">
         {chatHistory.map((chat, index) => (
           <div
             key={index}
-            style={{
-              textAlign: chat.sender === "user" ? "right" : "left",
-              margin: "10px 0",
-            }}
+            className={`message ${chat.sender === "user" ? "user-message" : "bot-message"}`}
           >
             <strong>{chat.sender === "user" ? "You: " : "Bot: "}</strong>
             <span>{chat.message}</span>
           </div>
         ))}
+        {isLoading && (
+          <div className="loader-container">
+            <Lottie options={loaderOptions} height={50} width={50} />
+          </div>
+        )}
       </div>
-      <div style={{ display: "flex" }}>
+      <div className="input-container">
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="give me best performing user"
-          style={{ flex: 1, padding: "10px", marginRight: "10px" }}
+          placeholder="Type your message..."
+          onKeyDown={handleKeyDown}
+          className="input-field"
         />
-        <button onClick={handleSend} disabled={isLoading} style={{ padding: "10px 20px" }}>
+        <button
+          onClick={handleSend}
+          disabled={isLoading}
+          className={`send-button ${isLoading ? "disabled" : ""}`}
+        >
           {isLoading ? "Sending..." : "Send"}
         </button>
       </div>
     </div>
-    </>
-  )
+  );
 }
 
 export default App
