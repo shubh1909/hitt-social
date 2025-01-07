@@ -1,30 +1,29 @@
-import { useState } from 'react'
-import Lottie from 'react-lottie';
-import loaderAnimation from './assets/loading.json'
- import './App.css'
+import { useState } from "react";
+import Lottie from "react-lottie";
+import loaderAnimation from "./assets/loading.json";
+import "./App.css";
 
 function App() {
-  
-  const [inputValue,setInputValue] = useState('') 
-  const [chatHistory,setChatHistory] = useState([])
-  const [isLoading,setIsLoading] = useState(false)
-  const apiEndpoint =import.meta.env.VITE_API_ENDPOINT
+  const [inputValue, setInputValue] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
   //console.log("apiendpoint===",apiEndpoint)
-  const bearerToken = import.meta.env.VITE_BEARER_TOKEN
+  const bearerToken = import.meta.env.VITE_BEARER_TOKEN;
   //console.log("BearerToken===",bearerToken)
 
-  const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
+  const apii = `https://api.langflow.astra.datastax.com/${apiEndpoint}`;
   const loaderOptions = {
     loop: true,
     autoplay: true,
     animationData: loaderAnimation,
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
+      preserveAspectRatio: "xMidYMid slice",
     },
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSend();
     }
   };
@@ -52,29 +51,28 @@ function App() {
     setIsLoading(true);
     setChatHistory((prev) => [
       ...prev,
-      { sender: "user", message: inputValue }
+      { sender: "user", message: inputValue },
     ]);
     setInputValue("");
     try {
-      
       const response = await fetch(apii, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${bearerToken}`,
-          "Access-Control-Allow-Origin": "*"
+          Authorization: `Bearer ${bearerToken}`,
+          "Access-Control-Allow-Origin": "hitt-social.vercel.app",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
         },
-        body: JSON.stringify(body)
-        
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
-      let ans=data.outputs[0].outputs[0].artifacts.message;
+      let ans = data.outputs[0].outputs[0].artifacts.message;
       setChatHistory((prev) => [
         ...prev,
         { sender: "bot", message: ans || "No response received" },
       ]);
-      
     } catch (error) {
       console.error("Error sending message:", error);
       setChatHistory((prev) => [
@@ -92,7 +90,9 @@ function App() {
         {chatHistory.map((chat, index) => (
           <div
             key={index}
-            className={`message ${chat.sender === "user" ? "user-message" : "bot-message"}`}
+            className={`message ${
+              chat.sender === "user" ? "user-message" : "bot-message"
+            }`}
           >
             <strong>{chat.sender === "user" ? "You: " : "Bot: "}</strong>
             <span>{chat.message}</span>
@@ -125,4 +125,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
