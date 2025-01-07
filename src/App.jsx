@@ -8,12 +8,13 @@ function App() {
   const [inputValue,setInputValue] = useState('') 
   const [chatHistory,setChatHistory] = useState([])
   const [isLoading,setIsLoading] = useState(false)
-  const apiEndpoint =import.meta.env.VITE_API_ENDPOINT
+  const apiEndpoint ='http://localhost:3001/api/chat'
   //console.log("apiendpoint===",apiEndpoint)
-  const bearerToken = import.meta.env.VITE_BEARER_TOKEN
+  //const bearerToken = import.meta.env.VITE_BEARER_TOKEN
   //console.log("BearerToken===",bearerToken)
 
-  const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
+  //const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
+  //console.log(apii)
   const loaderOptions = {
     loop: true,
     autoplay: true,
@@ -57,15 +58,18 @@ function App() {
     setInputValue("");
     try {
       
-      const response = await fetch(apii, {
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bearerToken}`,
+          //Authorization: `Bearer ${bearerToken}`,
         },
         body: JSON.stringify(body)
         
       });
+      if (!response.ok) {
+        throw new Error("failed to fetch response from backend");
+      }
 
       const data = await response.json();
       let ans=data.outputs[0].outputs[0].artifacts.message;
