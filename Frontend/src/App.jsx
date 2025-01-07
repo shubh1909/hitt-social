@@ -8,7 +8,7 @@ function App() {
   const [inputValue,setInputValue] = useState('') 
   const [chatHistory,setChatHistory] = useState([])
   const [isLoading,setIsLoading] = useState(false)
-  const apiEndpoint ='http://localhost:3001/api/chat'
+  const apiEndpoint ='https://hitt-social.onrender.com/api/chat'
   //console.log("apiendpoint===",apiEndpoint)
   //const bearerToken = import.meta.env.VITE_BEARER_TOKEN
   //console.log("BearerToken===",bearerToken)
