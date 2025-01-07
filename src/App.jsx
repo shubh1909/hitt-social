@@ -61,7 +61,8 @@ function App() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bearerToken}`,
+          "Authorization": `Bearer ${bearerToken}`,
+          "Access-Control-Allow-Origin": "*"
         },
         body: JSON.stringify(body)
         
