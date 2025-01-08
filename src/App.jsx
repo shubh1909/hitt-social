@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Lottie from 'react-lottie';
 import loaderAnimation from './assets/loading.json'
  import './App.css'
+ import Markdown from 'react-markdown'
 
 function App() {
   
@@ -90,7 +91,7 @@ function App() {
   };
   return (
     <div className="app-container">
-      <h2 className="title">Chatbot</h2>
+      <h2 className="title">HITT Social</h2>
       <div className="chatbox">
         {chatHistory.map((chat, index) => (
           <div
@@ -98,7 +99,7 @@ function App() {
             className={`message ${chat.sender === "user" ? "user-message" : "bot-message"}`}
           >
             <strong>{chat.sender === "user" ? "You: " : "Bot: "}</strong>
-            <span>{chat.message}</span>
+            <span><Markdown>{chat.message}</Markdown></span>
           </div>
         ))}
         {isLoading && (

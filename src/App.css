@@ -1,17 +1,18 @@
 .app-container {
-  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #490BAD 0%, #6B40B3 100%);
+  color: #f4f4f4;
 }
 
 .title {
   text-align: center;
   font-size: 24px;
-  color: #333;
+  /* color: #333; */
   margin-bottom: 20px;
 }
 
@@ -20,7 +21,7 @@
   background-color: #fff;
   border-radius: 8px;
   padding: 10px;
-  height: 300px;
+  height: 70vh;
   overflow-y: auto;
   position: relative;
 }
