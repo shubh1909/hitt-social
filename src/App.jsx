@@ -1,3 +1,4 @@
+ 
 import { useState } from 'react'
 import Lottie from 'react-lottie';
 import loaderAnimation from './assets/loading.json'
@@ -16,17 +17,18 @@ function App() {
 
   //const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
   //console.log(apii)
+ 
   const loaderOptions = {
     loop: true,
     autoplay: true,
     animationData: loaderAnimation,
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
+      preserveAspectRatio: "xMidYMid slice",
     },
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSend();
     }
   };
@@ -54,31 +56,31 @@ function App() {
     setIsLoading(true);
     setChatHistory((prev) => [
       ...prev,
-      { sender: "user", message: inputValue }
+      { sender: "user", message: inputValue },
     ]);
     setInputValue("");
     try {
+ 
       
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           //Authorization: `Bearer ${bearerToken}`,
+ 
         },
-        body: JSON.stringify(body)
-        
+        body: JSON.stringify(body),
       });
       if (!response.ok) {
         throw new Error("failed to fetch response from backend");
       }
 
       const data = await response.json();
-      let ans=data.outputs[0].outputs[0].artifacts.message;
+      let ans = data.outputs[0].outputs[0].artifacts.message;
       setChatHistory((prev) => [
         ...prev,
         { sender: "bot", message: ans || "No response received" },
       ]);
-      
     } catch (error) {
       console.error("Error sending message:", error);
       setChatHistory((prev) => [
@@ -96,7 +98,9 @@ function App() {
         {chatHistory.map((chat, index) => (
           <div
             key={index}
-            className={`message ${chat.sender === "user" ? "user-message" : "bot-message"}`}
+            className={`message ${
+              chat.sender === "user" ? "user-message" : "bot-message"
+            }`}
           >
             <strong>{chat.sender === "user" ? "You: " : "Bot: "}</strong>
             <span><Markdown>{chat.message}</Markdown></span>
@@ -129,4 +133,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
