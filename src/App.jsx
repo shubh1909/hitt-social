@@ -1,18 +1,23 @@
-import { useState } from "react";
-import Lottie from "react-lottie";
-import loaderAnimation from "./assets/loading.json";
-import "./App.css";
+ 
+import { useState } from 'react'
+import Lottie from 'react-lottie';
+import loaderAnimation from './assets/loading.json'
+ import './App.css'
+ import Markdown from 'react-markdown'
 
 function App() {
-  const [inputValue, setInputValue] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  
+  const [inputValue,setInputValue] = useState('') 
+  const [chatHistory,setChatHistory] = useState([])
+  const [isLoading,setIsLoading] = useState(false)
+  const apiEndpoint ='https://hitt-social.onrender.com/api/chat'
   //console.log("apiendpoint===",apiEndpoint)
-  const bearerToken = import.meta.env.VITE_BEARER_TOKEN;
+  //const bearerToken = import.meta.env.VITE_BEARER_TOKEN
   //console.log("BearerToken===",bearerToken)
 
-  const apii = `https://api.langflow.astra.datastax.com/${apiEndpoint}`;
+  //const apii=`https://api.langflow.astra.datastax.com/${apiEndpoint}`
+  //console.log(apii)
+ 
   const loaderOptions = {
     loop: true,
     autoplay: true,
@@ -55,17 +60,20 @@ function App() {
     ]);
     setInputValue("");
     try {
-      const response = await fetch(apii, {
+ 
+      
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bearerToken}`,
-          "Access-Control-Allow-Origin": "hitt-social.vercel.app",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          //Authorization: `Bearer ${bearerToken}`,
+ 
         },
         body: JSON.stringify(body),
       });
+      if (!response.ok) {
+        throw new Error("failed to fetch response from backend");
+      }
 
       const data = await response.json();
       let ans = data.outputs[0].outputs[0].artifacts.message;
@@ -85,7 +93,7 @@ function App() {
   };
   return (
     <div className="app-container">
-      <h2 className="title">Chatbot</h2>
+      <h2 className="title">HITT Social</h2>
       <div className="chatbox">
         {chatHistory.map((chat, index) => (
           <div
@@ -95,7 +103,7 @@ function App() {
             }`}
           >
             <strong>{chat.sender === "user" ? "You: " : "Bot: "}</strong>
-            <span>{chat.message}</span>
+            <span><Markdown>{chat.message}</Markdown></span>
           </div>
         ))}
         {isLoading && (
